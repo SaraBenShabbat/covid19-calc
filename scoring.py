@@ -21,7 +21,6 @@ doc = {
         'match_all': {}
     }
 }
-#res = es.search(index='measure_results_v4')
 source_to_update = {
     "doc": {
         "_score": 2.0
