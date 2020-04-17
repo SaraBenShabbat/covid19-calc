@@ -204,7 +204,7 @@ def main_func():
         # Check if this measure exists.
         if('age' in general_measure):
             if(general_measure['age'] < 65):
-                if(score_per_measure['age'] < 44):
+                if(general_measure['age'] < 44):
                     score_per_measure = 0
                 else:
                     score_per_measure = 1
