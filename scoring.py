@@ -9,7 +9,7 @@ from dateutil.parser import parse
 import pandas as pd
 import numpy as np
 
-host = 'https://search-covid19-es-xpwsq3s2uyodkz7tqizo5oxcty.eu-west-1.es.amazonaws.com'
+host = 'https://search-covid198-es-2-x6zr2th7oiq7sjzp653cs3k3xm.eu-west-1.es.amazonaws.com/'
 region = 'eu-west-1'
 es = Elasticsearch(
     hosts=host,
@@ -36,29 +36,29 @@ ms_utc = int(datetime.utcnow().timestamp() * 1000)
 
 # Create df's that represent the measure values and severity.
 df_breath = pd.DataFrame({'min': {0: 0, 1: 9, 2: 12, 3: 21, 4: 25},
-                          'max': {0: 8, 1: 11, 2: 20, 3: 24, 4: 35},
+                          'max': {0: 8.9, 1: 11.9, 2: 20.9, 3: 24.9, 4: 35},
                           'severity': {0: 3, 1: 1, 2: 0, 3: 2, 4: 3}, })
 df_pso2 = pd.DataFrame({'min': {0: 0, 1: 92, 2: 94, 3: 96},
-                        'max': {0: 91, 1: 93, 2: 95, 3: 100},
+                        'max': {0: 91.9, 1: 93.9, 2: 95.9, 3: 100},
                         'severity': {0: 3, 1: 2, 2: 1, 3: 0}, })
 df_BPM = pd.DataFrame({'min': {0: 0, 1: 41, 2: 51, 3: 91, 4: 111, 5: 131},
-                       'max': {0: 40, 1: 50, 2: 90, 3: 110, 4: 130, 5: 200},
+                       'max': {0: 40.9, 1: 50.9, 2: 90.9, 3: 110.9, 4: 130.9, 5: 200},
                        'severity': {0: 3, 1: 1, 2: 0, 3: 1, 4: 2, 5: 3}, })
 df_BloodPressure = pd.DataFrame({'min': {0: 0, 1: 91, 2: 101, 3: 111, 4: 220},
-                                 'max': {0: 90, 1: 100, 2: 110, 3: 219, 4: 300},
+                                 'max': {0: 90.9, 1: 100.9, 2: 110.9, 3: 219.9, 4: 300},
                                  'severity': {0: 3, 1: 2, 2: 1, 3: 0, 4: 3}, })
-df_fever = pd.DataFrame({'min': {0: 0, 1: 35.1, 2: 36.1, 3: 38.1, 4: 39.1},
-                         'max': {0: 35, 1: 36, 2: 38, 3: 39, 4: 43},
-                         'severity': {0: 3, 1: 1, 2: 0, 3: 1, 4: 2}, })
+df_fever = pd.DataFrame({'min': {0: 0, 1: 35.1, 2: 36.1, 3: 37.8, 4: 38.1, 5: 39.1},
+                         'max': {0: 35, 1: 36, 2: 37.7, 3: 38, 4: 39, 5: 45},
+                         'severity': {0: 3, 1: 1, 2: 0, 3: 1, 4: 2, 5: 3}, })
 
-df_breath_high_fever = pd.DataFrame({'min': {0: 0, 1: 9, 2: 12, 3: 21, 4: 25},
-                                     'max': {0: 8, 1: 11, 2: 20, 3: 24, 4: 35},
+df_breath_high_fever = pd.DataFrame({'min': {0: 0, 1: 7.7, 2: 10.2, 3: 17.8, 4: 20.5},
+                                     'max': {0: 7.6, 1: 10.1, 2: 17.7, 3: 20.4, 4: 35},
                                      'severity': {0: 3, 1: 1, 2: 0, 3: 2, 4: 3}, })
-df_BPM_high_fever = pd.DataFrame({'min': {0: 0, 1: 34.1, 2: 42.6, 3: 76.6, 4: 93.6, 5: 110.6},
-                                  'max': {0: 34, 1: 42.5, 2: 76.5, 3: 93.5, 4: 110.5, 5: 200},
+df_BPM_high_fever = pd.DataFrame({'min': {0: 0, 1: 35, 2: 43.3, 3: 77.3, 4: 94.3, 5: 111.3},
+                                  'max': {0: 34.9, 1: 43.2, 2: 77.2, 3: 94.2, 4: 111.2, 5: 200},
                                   'severity': {0: 3, 1: 1, 2: 0, 3: 1, 4: 2, 5: 3}, })
-df_BloodPressure_high_fever = pd.DataFrame({'min': {0: 0, 1: 76.6, 2: 85.1, 3: 93.6, 4: 187.1},
-                                            'max': {0: 76.5, 1: 85, 2: 93.5, 3: 187, 4: 300},
+df_BloodPressure_high_fever = pd.DataFrame({'min': {0: 0, 1: 77.3, 2: 85.8, 3: 34.4, 4: 187},
+                                            'max': {0: 77.2, 1: 85.7, 2: 94.3, 3: 186.9, 4: 300},
                                             'severity': {0: 3, 1: 2, 2: 1, 3: 0, 4: 3}, })
 
 df_names = [df_breath, df_pso2, df_BloodPressure, df_BPM, df_fever]
@@ -183,7 +183,6 @@ def check_expired():
 
 
 def main_func():
-    es_no_cache()
     check_expired()
 
     # Getting the data from 'LastKnown' index in redis.
@@ -191,8 +190,6 @@ def main_func():
 
     # Iterate over the patients and scoring each one.
     for record in records:
-        es_no_cache()
-
         # Get the desired data about every patient.
         record, general_measure, primary_measure, secondary_measure = get_desired_data(record)
 
@@ -207,7 +204,13 @@ def main_func():
 
         # Check if this measure exists.
         if('age' in general_measure):
-            score_per_measure = 0 if general_measure['age'] < 65 else 3
+            if(general_measure['age'] < 65):
+                if(score_per_measure['age'] < 44):
+                    score_per_measure = 0
+                else:
+                    score_per_measure = 1
+            else:
+                score_per_measure = 3 
             measure_dict['AgeScore'] = score_per_measure
             total_score = total_score + score_per_measure
 
@@ -249,6 +252,4 @@ def main_func():
 
 
 main_func()
-
-
 
